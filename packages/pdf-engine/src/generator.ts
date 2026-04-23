@@ -132,17 +132,42 @@ export async function generateExamPdf(
           color: rgb(0.98, 0.98, 0.98),
         });
 
-        // Draw answer zone label
-        const typeLabel =
-          question.type === 'equation'
-            ? 'Write equation here'
-            : question.type === 'diagram'
-              ? 'Draw diagram here'
-              : question.type === 'checkbox'
-                ? ''
+        // Draw answer zone content
+        if (question.type === 'checkbox' && question.mcqOptions && question.mcqOptions.length > 0) {
+          // Render MCQ options as labelled bubbles
+          const opts = question.mcqOptions;
+          const labels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+          const optionSpacing = Math.min(26, (bb.height - 10) / opts.length);
+          for (let i = 0; i < opts.length; i++) {
+            const optY = pdfY + bb.height - 16 - i * optionSpacing;
+            // Draw bubble circle
+            page.drawCircle({
+              x: bb.x + 14,
+              y: optY,
+              size: 6,
+              borderColor: rgb(0.4, 0.4, 0.4),
+              borderWidth: 1,
+              color: rgb(1, 1, 1),
+            });
+            // Draw option label and text
+            const optText = opts[i] ? `${labels[i] ?? String(i + 1)}.  ${opts[i]}` : `${labels[i] ?? String(i + 1)}.`;
+            page.drawText(optText, {
+              x: bb.x + 28,
+              y: optY - 4,
+              size: 10,
+              font,
+              color: rgb(0.1, 0.1, 0.1),
+              maxWidth: bb.width - 40,
+            });
+          }
+        } else {
+          const typeLabel =
+            question.type === 'equation'
+              ? 'Write equation here'
+              : question.type === 'diagram'
+                ? 'Draw diagram here'
                 : 'Write answer here';
 
-        if (typeLabel) {
           page.drawText(typeLabel, {
             x: bb.x + 4,
             y: pdfY + bb.height - 14,

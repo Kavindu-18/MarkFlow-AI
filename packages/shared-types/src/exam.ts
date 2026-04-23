@@ -2,6 +2,9 @@
 
 export type QuestionType = 'text' | 'equation' | 'diagram' | 'checkbox';
 
+/** Controls how much vertical space the answer zone takes on the printed page */
+export type AnswerZoneSize = 'small' | 'medium' | 'large' | 'full-page';
+
 export interface BoundingBox {
   /** X offset from left edge in points (1pt = 1/72 inch) */
   x: number;
@@ -28,6 +31,12 @@ export interface Question {
   rubric: string;
   /** Optional reference answer (LaTeX for equations, text, or image URI for diagrams) */
   referenceAnswer?: string;
+  /** How much vertical space the answer zone takes (default: auto-calculated from type) */
+  answerZoneSize?: AnswerZoneSize;
+  /** MCQ: list of choice labels (e.g. ["Mitosis", "Meiosis", "Both", "Neither"]) */
+  mcqOptions?: string[];
+  /** MCQ: 0-based index of the correct option (used for grading, not printed) */
+  mcqCorrectIndex?: number;
   /** Region on the page where the student writes their answer */
   boundingBox: BoundingBox;
 }
