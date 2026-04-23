@@ -3,22 +3,166 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
+  --bg-primary: #030712;
+  --bg-secondary: #0f172a;
+  --accent: 139 92 246;
+  --accent2: 99 102 241;
+  --accent3: 236 72 153;
 }
+
+/* ── Base ───────────────────────────────────────────── */
 
 body {
-  @apply bg-slate-950 text-white antialiased;
-  background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
-  background-attachment: fixed;
+  @apply bg-gray-950 text-white antialiased;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
-/* Scrollbar styling for the glassy theme */
+/* ── Animated mesh background ───────────────────────── */
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(var(--accent), 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 85% 15%, rgba(var(--accent2), 0.10) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 50% 90%, rgba(var(--accent3), 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 60% at 70% 60%, rgba(var(--accent), 0.06) 0%, transparent 50%);
+  animation: meshShift 20s ease-in-out infinite alternate;
+}
+
+@keyframes meshShift {
+  0%   { filter: hue-rotate(0deg) blur(0px); }
+  50%  { filter: hue-rotate(15deg) blur(0px); }
+  100% { filter: hue-rotate(-10deg) blur(0px); }
+}
+
+/* ── Noise overlay for texture ──────────────────────── */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ── Grid dot pattern ───────────────────────────────── */
+
+.bg-grid {
+  background-size: 40px 40px;
+  background-image:
+    radial-gradient(circle, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+/* ── Animated gradient border ───────────────────────── */
+
+.gradient-border {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent), 0.5),
+    rgba(var(--accent2), 0.3),
+    rgba(var(--accent3), 0.2),
+    rgba(var(--accent), 0.5)
+  );
+  background-size: 300% 300%;
+  animation: borderGlow 6s ease-in-out infinite;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+@keyframes borderGlow {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* ── Shimmer / shine sweep ──────────────────────────── */
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.03) 45%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.03) 55%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmerSweep 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shimmerSweep {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Glow pulse ─────────────────────────────────────── */
+
+.glow-pulse {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(var(--accent), 0.15), 0 0 60px rgba(var(--accent), 0.05); }
+  50%      { box-shadow: 0 0 30px rgba(var(--accent), 0.25), 0 0 80px rgba(var(--accent), 0.10); }
+}
+
+/* ── Float animation ────────────────────────────────── */
+
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+/* ── Text gradient ──────────────────────────────────── */
+
+.text-gradient {
+  background: linear-gradient(135deg, #a78bfa 0%, #818cf8 30%, #6366f1 50%, #ec4899 80%, #a78bfa 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textGradient 6s ease infinite;
+}
+
+@keyframes textGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+/* ── Scrollbar ──────────────────────────────────────── */
+
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -26,10 +170,25 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
+  background: rgba(139, 92, 246, 0.25);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(139, 92, 246, 0.45);
+}
+
+/* ── Focus visible ring ─────────────────────────────── */
+
+*:focus-visible {
+  outline: 2px solid rgba(var(--accent), 0.6);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+/* ── Selection ──────────────────────────────────────── */
+
+::selection {
+  background: rgba(var(--accent), 0.3);
+  color: #fff;
 }

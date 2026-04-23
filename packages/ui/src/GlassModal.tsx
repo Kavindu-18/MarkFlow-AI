@@ -25,24 +25,26 @@ export function GlassModal({ open, onClose, title, children }: GlassModalProps) 
       ref={dialogRef}
       onClose={onClose}
       className={[
-        'rounded-2xl border border-white/20 bg-slate-900/80 backdrop-blur-xl',
-        'shadow-2xl shadow-black/40 text-white',
+        'rounded-2xl border border-white/[0.08] bg-gray-950/90 backdrop-blur-3xl',
+        'shadow-2xl shadow-black/60 text-white',
         'p-0 max-w-lg w-full',
-        'open:animate-in open:fade-in-0 open:zoom-in-95',
-        'backdrop:bg-black/60 backdrop:backdrop-blur-sm',
+        'open:animate-scale-in',
+        'backdrop:bg-black/70 backdrop:backdrop-blur-md',
       ].join(' ')}
     >
+      {/* Top highlight */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-500/30 to-transparent" />
       <div className="p-6">
         {title && (
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-xl font-semibold">{title}</h2>
+          <div className="mb-5 flex items-center justify-between">
+            <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
             <button
               onClick={onClose}
-              className="rounded-lg p-1 hover:bg-white/10 transition-colors"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-white/40 transition-colors hover:bg-white/[0.06] hover:text-white"
               aria-label="Close"
             >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>

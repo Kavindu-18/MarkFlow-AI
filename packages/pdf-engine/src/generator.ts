@@ -135,12 +135,12 @@ export async function generateExamPdf(
         // Draw answer zone label
         const typeLabel =
           question.type === 'equation'
-            ? '✏️ Write equation here'
+            ? 'Write equation here'
             : question.type === 'diagram'
-              ? '✏️ Draw diagram here'
+              ? 'Draw diagram here'
               : question.type === 'checkbox'
                 ? ''
-                : '✏️ Write answer here';
+                : 'Write answer here';
 
         if (typeLabel) {
           page.drawText(typeLabel, {

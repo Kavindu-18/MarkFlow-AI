@@ -103,13 +103,34 @@ export function ExamGeneratorForm() {
   }, [pdfBytes, title]);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-6">
-      <h1 className="text-3xl font-bold">Create Exam</h1>
+    <div className="mx-auto max-w-5xl space-y-8 p-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Create Exam</h1>
+          <p className="mt-1 text-sm text-white/30">Design your exam template with smart QR markers.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {pdfBytes && (
+            <GlassButton variant="secondary" size="sm" onClick={handleDownload}>
+              <span className="mr-1.5">↓</span> Download ({(pdfBytes.length / 1024).toFixed(0)} KB)
+            </GlassButton>
+          )}
+          <GlassButton
+            onClick={handleGenerate}
+            loading={generating}
+            size="sm"
+            disabled={!title || !subject || questions.length === 0 || !studentIds.trim()}
+          >
+            Generate PDF
+          </GlassButton>
+        </div>
+      </div>
 
       {/* Exam Metadata */}
-      <GlassCard className="p-6 space-y-4">
-        <h2 className="text-lg font-semibold">Exam Details</h2>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <GlassCard className="p-6 space-y-5">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-white/40">Exam Details</h2>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <GlassInput
             label="Exam Title"
             placeholder="e.g., Midterm Exam — Biology 101"
@@ -126,17 +147,28 @@ export function ExamGeneratorForm() {
       </GlassCard>
 
       {/* Questions */}
-      <GlassCard className="p-6 space-y-4">
+      <GlassCard className="p-6 space-y-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Questions ({questions.length})</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-white/40">Questions</h2>
+            {questions.length > 0 && (
+              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-violet-500/15 px-1.5 text-[10px] font-bold text-violet-400">{questions.length}</span>
+            )}
+          </div>
           <GlassButton variant="secondary" size="sm" onClick={addQuestion}>
             + Add Question
           </GlassButton>
         </div>
         {questions.length === 0 ? (
-          <p className="text-sm text-white/40 text-center py-8">
-            No questions yet. Click &quot;Add Question&quot; to get started.
-          </p>
+          <div className="flex flex-col items-center justify-center py-16 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/[0.04] mb-4">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/20">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+            </div>
+            <p className="text-sm text-white/25">No questions yet</p>
+            <p className="text-xs text-white/15 mt-1">Click &quot;Add Question&quot; to get started</p>
+          </div>
         ) : (
           <div className="space-y-4">
             {questions.map((q) => (
@@ -152,37 +184,21 @@ export function ExamGeneratorForm() {
       </GlassCard>
 
       {/* Student IDs */}
-      <GlassCard className="p-6 space-y-4">
-        <h2 className="text-lg font-semibold">Student IDs</h2>
+      <GlassCard className="p-6 space-y-5">
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-white/40">Student IDs</h2>
         <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-medium text-white/80" htmlFor="student-ids">
+          <label className="text-xs text-white/30" htmlFor="student-ids">
             Enter student IDs (one per line or comma-separated)
           </label>
           <textarea
             id="student-ids"
-            className="rounded-xl border border-white/20 bg-white/5 backdrop-blur-sm px-4 py-2.5 text-white placeholder:text-white/40 outline-none transition-all duration-200 focus:border-indigo-400/60 focus:bg-white/10 focus:ring-2 focus:ring-indigo-500/20 min-h-[100px] resize-y"
+            className="rounded-xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-sm px-4 py-3 text-sm text-white placeholder:text-white/20 outline-none transition-all duration-200 focus:border-violet-500/40 focus:bg-white/[0.06] focus:shadow-[0_0_0_3px_rgba(139,92,246,0.12)] min-h-[120px] resize-y"
             placeholder={"STU001\nSTU002\nSTU003"}
             value={studentIds}
             onChange={(e) => setStudentIds(e.target.value)}
           />
         </div>
       </GlassCard>
-
-      {/* Generate + Download */}
-      <div className="flex gap-4">
-        <GlassButton
-          onClick={handleGenerate}
-          loading={generating}
-          disabled={!title || !subject || questions.length === 0 || !studentIds.trim()}
-        >
-          Generate PDF
-        </GlassButton>
-        {pdfBytes && (
-          <GlassButton variant="secondary" onClick={handleDownload}>
-            ⬇ Download PDF ({(pdfBytes.length / 1024).toFixed(0)} KB)
-          </GlassButton>
-        )}
-      </div>
 
       {/* Preview */}
       {pdfBytes && <ExamPreview pdfBytes={pdfBytes} />}

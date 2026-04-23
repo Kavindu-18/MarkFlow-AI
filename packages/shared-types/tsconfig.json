@@ -1,5 +1,5 @@
 {
-  "extends": "@markflow/tsconfig/node-library.json",
+  "extends": "../tsconfig/node-library.json",
   "compilerOptions": {
     "outDir": "./dist",
     "rootDir": "./src"

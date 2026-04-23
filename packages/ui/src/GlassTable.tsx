@@ -22,14 +22,14 @@ export function GlassTable<T extends Record<string, unknown>>({
   emptyMessage = 'No data',
 }: GlassTableProps<T>) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/20 bg-white/5 backdrop-blur-md">
+    <div className="overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl">
       <table className="w-full text-left">
         <thead>
-          <tr className="border-b border-white/10">
+          <tr className="border-b border-white/[0.06]">
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="px-4 py-3 text-sm font-semibold text-white/70 uppercase tracking-wider"
+                className="px-5 py-3.5 text-[11px] font-semibold uppercase tracking-wider text-white/40"
               >
                 {col.header}
               </th>
@@ -39,22 +39,23 @@ export function GlassTable<T extends Record<string, unknown>>({
         <tbody>
           {data.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="px-4 py-8 text-center text-white/40">
+              <td colSpan={columns.length} className="px-5 py-12 text-center text-sm text-white/30">
                 {emptyMessage}
               </td>
             </tr>
           ) : (
-            data.map((item) => (
+            data.map((item, i) => (
               <tr
                 key={keyExtractor(item)}
                 onClick={() => onRowClick?.(item)}
                 className={[
-                  'border-b border-white/5 transition-colors',
-                  onRowClick ? 'cursor-pointer hover:bg-white/10' : '',
+                  'border-b border-white/[0.03] transition-colors duration-150',
+                  onRowClick ? 'cursor-pointer hover:bg-white/[0.04]' : '',
+                  i % 2 === 0 ? '' : 'bg-white/[0.01]',
                 ].join(' ')}
               >
                 {columns.map((col) => (
-                  <td key={col.key} className="px-4 py-3 text-sm text-white/90">
+                  <td key={col.key} className="px-5 py-3.5 text-sm text-white/80">
                     {col.render ? col.render(item) : String(item[col.key] ?? '')}
                   </td>
                 ))}

@@ -55,31 +55,36 @@ export function ReviewDashboard({ reviewOnly = false }: ReviewDashboardProps) {
 
   if (selectedSubmission) {
     return (
-      <div className="mx-auto max-w-6xl space-y-6 p-6">
+      <div className="mx-auto max-w-6xl space-y-8 p-8">
         <div className="flex items-center gap-4">
           <GlassButton variant="ghost" size="sm" onClick={() => setSelectedSubmissionId(null)}>
-            ← Back to list
+            ← Back
           </GlassButton>
-          <h1 className="text-2xl font-bold">
-            Review: Student {selectedSubmission.studentId}
-          </h1>
-          {selectedSubmission.overallConfidence != null && confidenceBadge(selectedSubmission.overallConfidence)}
+          <div>
+            <h1 className="text-xl font-bold tracking-tight">
+              Student {selectedSubmission.studentId}
+            </h1>
+            <div className="mt-1 flex items-center gap-2">
+              {selectedSubmission.overallConfidence != null && confidenceBadge(selectedSubmission.overallConfidence)}
+            </div>
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
-          <GlassCard className="p-4 text-center">
-            <p className="text-sm text-white/60">Score</p>
-            <p className="text-3xl font-bold">
-              {selectedSubmission.totalScore ?? '—'} / {selectedSubmission.maxScore ?? '—'}
+          <GlassCard className="p-5 text-center" glow>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">Score</p>
+            <p className="mt-2 text-3xl font-bold tracking-tight">
+              {selectedSubmission.totalScore ?? '—'}
+              <span className="text-base font-normal text-white/25"> / {selectedSubmission.maxScore ?? '—'}</span>
             </p>
           </GlassCard>
-          <GlassCard className="p-4 text-center">
-            <p className="text-sm text-white/60">Percentage</p>
-            <p className="text-3xl font-bold">{selectedSubmission.percentage?.toFixed(1) ?? '—'}%</p>
+          <GlassCard className="p-5 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">Percentage</p>
+            <p className="mt-2 text-3xl font-bold tracking-tight">{selectedSubmission.percentage?.toFixed(1) ?? '—'}%</p>
           </GlassCard>
-          <GlassCard className="p-4 text-center">
-            <p className="text-sm text-white/60">Confidence</p>
-            <p className="text-3xl font-bold">
+          <GlassCard className="p-5 text-center">
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-white/30">Confidence</p>
+            <p className="mt-2 text-3xl font-bold tracking-tight">
               {selectedSubmission.overallConfidence != null
                 ? `${(selectedSubmission.overallConfidence * 100).toFixed(0)}%`
                 : '—'}
@@ -113,8 +118,14 @@ export function ReviewDashboard({ reviewOnly = false }: ReviewDashboardProps) {
             />
           ))}
           {questionResults.length === 0 && (
-            <GlassCard className="p-8 text-center">
-              <p className="text-white/40">No question results loaded. Connect to the API to fetch grading data.</p>
+            <GlassCard className="p-12 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/[0.04] mx-auto mb-4">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/20">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+              </div>
+              <p className="text-sm text-white/25">No grading data loaded yet.</p>
+              <p className="text-xs text-white/15 mt-1">Connect the API to fetch results.</p>
             </GlassCard>
           )}
         </div>
@@ -123,20 +134,28 @@ export function ReviewDashboard({ reviewOnly = false }: ReviewDashboardProps) {
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 p-6">
+    <div className="mx-auto max-w-6xl space-y-8 p-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Grading Review</h1>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Grading Review</h1>
+          <p className="mt-1 text-sm text-white/30">Review and approve AI-graded submissions.</p>
+        </div>
         <div className="flex gap-3">
           <GlassButton variant="secondary" size="sm" onClick={handleBatchApprove}>
-            ✅ Approve All ≥ 90% Confidence
+            Approve All ≥ 90%
           </GlassButton>
         </div>
       </div>
 
       {filtered.length === 0 ? (
-        <GlassCard className="p-12 text-center">
-          <p className="text-xl text-white/40 mb-2">No submissions to review</p>
-          <p className="text-sm text-white/30">
+        <GlassCard className="py-20 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.04] mx-auto mb-5">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-white/15">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <p className="text-sm text-white/30">No submissions to review</p>
+          <p className="text-xs text-white/15 mt-1">
             {reviewOnly
               ? 'All graded submissions have confidence ≥ 85%.'
               : 'No submissions have been processed yet.'}

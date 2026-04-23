@@ -173,23 +173,26 @@ export function ScannerView() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 p-6">
+    <div className="mx-auto max-w-5xl space-y-6 p-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Exam Scanner</h1>
-        <GlassBadge variant={detectedCorners ? 'success' : 'warning'}>
-          {detectedCorners ? '4 Markers Detected' : 'Searching for markers...'}
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Exam Scanner</h1>
+          <p className="mt-1 text-sm text-white/30">Point your camera at a completed exam paper.</p>
+        </div>
+        <GlassBadge variant={detectedCorners ? 'success' : 'warning'} dot>
+          {detectedCorners ? '4 Markers Detected' : 'Searching...'}
         </GlassBadge>
       </div>
 
       {error && (
-        <GlassCard className="p-4 border-red-400/30 bg-red-500/10">
-          <p className="text-sm text-red-300">{error}</p>
+        <GlassCard className="p-4 border-red-500/20 bg-red-500/[0.04]">
+          <p className="text-sm text-red-400">{error}</p>
         </GlassCard>
       )}
 
       {/* Camera View */}
       <GlassCard className="overflow-hidden">
-        <div className="relative aspect-[4/3] bg-black">
+        <div className="relative aspect-[4/3] bg-gray-950">
           <video
             ref={videoRef}
             className="absolute inset-0 h-full w-full object-cover"
