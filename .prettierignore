@@ -1,0 +1,10 @@
+node_modules
+dist
+.next
+.turbo
+coverage
+*.lock
+apps/api-gateway
+apps/lti-service
+infra/terraform
+pipelines

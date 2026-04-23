@@ -1,0 +1,9 @@
+pdf2image==1.17.0
+pyzbar==0.1.9
+Pillow>=10.0.0
+azure-storage-file-datalake>=12.14.0
+azure-cosmos>=4.7.0
+azure-ai-formrecognizer>=3.3.0
+azure-eventhub>=5.11.0
+openai>=1.40.0
+requests>=2.31.0

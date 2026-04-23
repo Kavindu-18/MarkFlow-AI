@@ -1,0 +1,63 @@
+name: Deploy Pipelines
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pipelines/**'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-databricks:
+    name: Sync Databricks Notebooks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Install Databricks CLI
+        run: pip install databricks-cli
+
+      - name: Configure Databricks
+        run: |
+          echo "[DEFAULT]" > ~/.databrickscfg
+          echo "host = ${{ secrets.DATABRICKS_HOST }}" >> ~/.databrickscfg
+          echo "token = ${{ secrets.DATABRICKS_TOKEN }}" >> ~/.databrickscfg
+
+      - name: Upload Notebooks
+        run: |
+          databricks workspace import_dir \
+            pipelines/databricks/notebooks \
+            /markflow/notebooks \
+            --overwrite
+
+  deploy-airflow:
+    name: Sync Airflow DAGs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Upload DAGs to storage
+        run: |
+          az storage blob upload-batch \
+            --account-name ${{ secrets.AIRFLOW_STORAGE_ACCOUNT }} \
+            --destination airflow-dags \
+            --source pipelines/airflow/dags \
+            --overwrite
